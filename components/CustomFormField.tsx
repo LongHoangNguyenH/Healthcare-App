@@ -75,6 +75,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
         )
 
     default:
+        return null;
   }
 };
 

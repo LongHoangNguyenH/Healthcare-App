@@ -7,12 +7,9 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "../ui/form";
 import CustomFormField from "../CustomFormField";
+import SubmitButton from "../SubmitButton";
+import { useState } from "react";
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-});
 
 export enum FormFieldTypes {
   INPUT = "input",
@@ -24,7 +21,14 @@ export enum FormFieldTypes {
   SKELETON = "skeleton",
 }
 
+const formSchema = z.object({
+    username: z.string().min(2, {
+      message: "Username must be at least 2 characters.",
+    }),
+  });
+
 export function PatientForm() {
+    const [isLoading, setIsLoading] = useState(false);
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,10 +45,10 @@ export function PatientForm() {
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex-1">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 space-y-6">
         <section className="mb-12 space-y-4">
           <h1 className="header">Hi There</h1>
-          <p className="text-dart-700">Schedule your first appointment.</p>
+          <p className="text-dark-700">Schedule your first appointment.</p>
         </section>
 
         <CustomFormField
@@ -77,7 +81,10 @@ export function PatientForm() {
           iconAlt="email"
         />
 
-        <Button type="submit">Submit</Button>
+        <SubmitButton isLoading={isLoading}>
+            Get Started
+        </SubmitButton>
+
       </form>
     </Form>
   );
