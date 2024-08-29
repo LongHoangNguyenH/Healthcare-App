@@ -9,7 +9,8 @@ import CustomFormField from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { useState } from "react";
 import { userFormValidation } from "@/lib/validation";
-
+import { createUser } from "@/lib/actions/patient.actions";
+import { useRouter } from "next/navigation";
 
 export enum FormFieldTypes {
   INPUT = "input",
@@ -21,10 +22,9 @@ export enum FormFieldTypes {
   SKELETON = "skeleton",
 }
 
-
-
 export function PatientForm() {
-    const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   // 1. Define your form.
   const form = useForm<z.infer<typeof userFormValidation>>({
     resolver: zodResolver(userFormValidation),
@@ -36,10 +36,21 @@ export function PatientForm() {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof userFormValidation>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof userFormValidation>) => {
+    setIsLoading(true);
+    try{
+      const user = {
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+      }
+      const newUser = await createUser(user);
+      if(newUser){
+        router.push(`/patients/${newUser.$id}/register`);
+      }
+    }catch(error: any){
+      console.log(error);
+    }
   }
   return (
     <Form {...form}>
@@ -79,10 +90,7 @@ export function PatientForm() {
           iconAlt="email"
         />
 
-        <SubmitButton isLoading={isLoading}>
-            Get Started
-        </SubmitButton>
-
+        <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
     </Form>
   );
