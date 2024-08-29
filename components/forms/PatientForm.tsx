@@ -1,31 +1,23 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Form } from "../ui/form";
-import CustomFormField from "../CustomFormField";
-import SubmitButton from "../SubmitButton";
-import { useState } from "react";
-import { userFormValidation } from "@/lib/validation";
+import { Form } from "@/components/ui/form";
 import { createUser } from "@/lib/actions/patient.actions";
-import { useRouter } from "next/navigation";
+import { userFormValidation } from "@/lib/validation";
 
-export enum FormFieldTypes {
-  INPUT = "input",
-  CHECKBOX = "checkbox",
-  TEXTAREA = "textarea",
-  PHONE_INPUT = "phoneInput",
-  DATE_PICKER = "datePicker",
-  SELECT = "select",
-  SKELETON = "skeleton",
-}
+import "react-phone-number-input/style.css";
+import CustomFormField, { FormFieldType } from "../CustomFormField";
+import SubmitButton from "../SubmitButton";
 
-export function PatientForm() {
-  const [isLoading, setIsLoading] = useState(false);
+export const PatientForm = () => {
   const router = useRouter();
-  // 1. Define your form.
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<z.infer<typeof userFormValidation>>({
     resolver: zodResolver(userFormValidation),
     defaultValues: {
@@ -35,33 +27,38 @@ export function PatientForm() {
     },
   });
 
-  // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof userFormValidation>) => {
     setIsLoading(true);
-    try{
+
+    try {
       const user = {
         name: values.name,
         email: values.email,
         phone: values.phone,
-      }
+      };
+
       const newUser = await createUser(user);
-      if(newUser){
+
+      if (newUser) {
         router.push(`/patients/${newUser.$id}/register`);
       }
-    }catch(error: any){
+    } catch (error) {
       console.log(error);
     }
-  }
+
+    setIsLoading(false);
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 space-y-6">
         <section className="mb-12 space-y-4">
-          <h1 className="header">Hi There</h1>
-          <p className="text-dark-700">Schedule your first appointment.</p>
+          <h1 className="header">Hi there</h1>
+          <p className="text-dark-700">Get started with appointments.</p>
         </section>
 
         <CustomFormField
-          fieldType={FormFieldTypes.INPUT}
+          fieldType={FormFieldType.INPUT}
           control={form.control}
           name="name"
           label="Full name"
@@ -71,7 +68,7 @@ export function PatientForm() {
         />
 
         <CustomFormField
-          fieldType={FormFieldTypes.INPUT}
+          fieldType={FormFieldType.INPUT}
           control={form.control}
           name="email"
           label="Email"
@@ -81,19 +78,15 @@ export function PatientForm() {
         />
 
         <CustomFormField
-          fieldType={FormFieldTypes.PHONE_INPUT}
+          fieldType={FormFieldType.PHONE_INPUT}
           control={form.control}
           name="phone"
           label="Phone number"
           placeholder="(84) 123 456 789"
-          iconSrc="/assets/icons/email.svg"
-          iconAlt="email"
         />
 
         <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
     </Form>
   );
-}
-
-export default PatientForm;
+};

@@ -5,13 +5,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Form, FormControl } from "../ui/form";
-import CustomFormField from "../CustomFormField";
+import CustomFormField, { FormFieldType } from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { useState } from "react";
 import { userFormValidation } from "@/lib/validation";
 import { createUser } from "@/lib/actions/patient.actions";
 import { useRouter } from "next/navigation";
-import { FormFieldTypes } from "./PatientForm";
+
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { GenderOptions } from "@/constants";
 import { Label } from "../ui/label";
@@ -19,7 +19,7 @@ import { Label } from "../ui/label";
 export function RegisterForm({ user }: { user: User }) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  // 1. Define your form.
+
   const form = useForm<z.infer<typeof userFormValidation>>({
     resolver: zodResolver(userFormValidation),
     defaultValues: {
@@ -29,7 +29,6 @@ export function RegisterForm({ user }: { user: User }) {
     },
   });
 
-  // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof userFormValidation>) => {
     setIsLoading(true);
     try {
@@ -63,7 +62,7 @@ export function RegisterForm({ user }: { user: User }) {
           {/* NAME */}
 
           <CustomFormField
-            fieldType={FormFieldTypes.INPUT}
+            fieldType={FormFieldType.INPUT}
             control={form.control}
             name="name"
             placeholder="Your fullname"
@@ -74,7 +73,7 @@ export function RegisterForm({ user }: { user: User }) {
           {/* EMAIL & PHONE */}
           <div className="flex flex-col gap-6 xl:flex-row">
             <CustomFormField
-              fieldType={FormFieldTypes.INPUT}
+              fieldType={FormFieldType.INPUT}
               control={form.control}
               name="email"
               label="Email address"
@@ -84,26 +83,25 @@ export function RegisterForm({ user }: { user: User }) {
             />
 
             <CustomFormField
-              fieldType={FormFieldTypes.PHONE_INPUT}
+              fieldType={FormFieldType.PHONE_INPUT}
               control={form.control}
               name="phone"
               label="Phone Number"
-              placeholder="(555) 123-4567"
+              placeholder="(84) 123 456 789"
             />
           </div>
           
-
           {/* BirthDay & Gender */}
           <div className="flex flex-col gap-6 xl:flex-row">
             <CustomFormField
-              fieldType={FormFieldTypes.DATE_PICKER}
+              fieldType={FormFieldType.DATE_PICKER}
               control={form.control}
               name="birthDate"
               label="Date of birth"
             />
 
             <CustomFormField
-              fieldType={FormFieldTypes.SKELETON}
+              fieldType={FormFieldType.SKELETON}
               control={form.control}
               name="gender"
               label="Gender"
