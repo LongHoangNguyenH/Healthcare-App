@@ -1,22 +1,12 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
 import StatusBadge from "../StatusBadge";
 import { Appointment } from "@/types/appwrite.types";
-import { formatDate } from "react-datepicker/dist/date_utils";
 import { formatDateTime } from "@/lib/utils";
 import { Doctors } from "@/constants";
 import Image from "next/image";
+import AppointmentModal from "../AppointmentModal";
 
 export const columns: ColumnDef<Appointment>[] = [
   {
@@ -80,45 +70,32 @@ export const columns: ColumnDef<Appointment>[] = [
       );
     },
   },
-//   {
-//     accessorKey: "amount",
-//     header: () => <div className="text-right">Amount</div>,
-//     cell: ({ row }) => {
-//       const amount = parseFloat(row.getValue("amount"));
-//       const formatted = new Intl.NumberFormat("en-US", {
-//         style: "currency",
-//         currency: "USD",
-//       }).format(amount);
+  {
+    id: "actions",
+    header: () => <div className="pl-4">Actions</div>,
+    
+    cell: ({ row }) => {
+        const appointment = row.original;
+      return (
+        <div className="flx gap-1">
+          <AppointmentModal
+            type="schedule"
+            patientId={appointment.patient.$id}
+            userId={appointment.userId}
+            appointment={appointment}
+            title="Schedule Appointment"
+            description="Please confirm the following details to schedule."
+          />
 
-//       return <div className="text-right font-medium">{formatted}</div>;
-//     },
-//   },
-//   {
-//     id: "actions",
-//     cell: ({ row }) => {
-//       const payment = row.original;
-
-//       return (
-//         <DropdownMenu>
-//           <DropdownMenuTrigger asChild>
-//             <Button variant="ghost" className="h-8 w-8 p-0">
-//               <span className="sr-only">Open menu</span>
-//               <MoreHorizontal className="h-4 w-4" />
-//             </Button>
-//           </DropdownMenuTrigger>
-//           <DropdownMenuContent align="end">
-//             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-//             <DropdownMenuItem
-//               onClick={() => navigator.clipboard.writeText(payment.id)}
-//             >
-//               Copy payment ID
-//             </DropdownMenuItem>
-//             <DropdownMenuSeparator />
-//             <DropdownMenuItem>View customer</DropdownMenuItem>
-//             <DropdownMenuItem>View payment details</DropdownMenuItem>
-//           </DropdownMenuContent>
-//         </DropdownMenu>
-//       );
-//     },
-//   },
+          <AppointmentModal  type="cancel"
+            patientId={appointment.patient.$id}
+            userId={appointment.userId}
+            appointment={appointment}
+            title="Cancel Appointment"
+            description="Are you sure you want to cancel your appointment?"
+          />
+        </div>
+      );
+    },
+  },
 ];
