@@ -1,6 +1,6 @@
 
 import { PatientForm } from "@/components/forms/PatientForm";
-import PasskeyModal from "@/components/PasskeyModal";
+import {PasskeyModal} from "@/components/PasskeyModal";
 import Image from "next/image";
 import Link from "next/link";
 

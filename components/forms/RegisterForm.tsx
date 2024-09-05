@@ -22,7 +22,7 @@ import {
 import { Label } from "../ui/label";
 import { SelectItem } from "../ui/select";
 import Image from "next/image";
-import FiledUploader from "../FiledUploader";
+import {FileUploader} from "../FiledUploader";
 
 const RegisterForm = ({ user }: { user: User }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -309,7 +309,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             label="Scanned Copy of Identification Document"
             renderSkeleton={(field) => (
               <FormControl>
-                <FiledUploader files={field.value} onChange={field.onChange} />
+                <FileUploader files={field.value} onChange={field.onChange} />
               </FormControl>
             )}
           />
