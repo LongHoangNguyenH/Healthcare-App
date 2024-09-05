@@ -116,4 +116,4 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 
 ## <a name="deployment"> Deployment</a>
 
-[Home Rental]()
+[Home Rental](https://healthcare-app-gray.vercel.app/)
